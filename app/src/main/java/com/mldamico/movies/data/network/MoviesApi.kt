@@ -1,4 +1,4 @@
-package com.mldamico.movies
+package com.mldamico.movies.data.network
 
 import com.mldamico.movies.models.Movies
 import retrofit2.Response

@@ -1,6 +1,6 @@
 package com.mldamico.movies.di
 
-import com.mldamico.movies.MoviesApi
+import com.mldamico.movies.data.network.MoviesApi
 import com.mldamico.movies.util.Constants.Companion.BASE_URL
 import dagger.Module
 import dagger.Provides
