@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/moviesFragment"
-        android:name="com.mldamico.movies.MoviesFragment"
+        android:name="com.mldamico.movies.ui.fragments.movies.MoviesFragment"
         android:label="Movies"
         tools:layout="@layout/fragment_movies" />
     <fragment
         android:id="@+id/singleMovieFragment"
-        android:name="com.mldamico.movies.SingleMovieFragment"
+        android:name="com.mldamico.movies.ui.fragments.singlemovie.SingleMovieFragment"
         android:label="Movie"
         tools:layout="@layout/fragment_single_movie" />
 </navigation>
