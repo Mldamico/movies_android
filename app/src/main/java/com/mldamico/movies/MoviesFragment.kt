@@ -5,11 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mldamico.movies.databinding.FragmentMoviesBinding
 
 
 class MoviesFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-
+    private var _binding: FragmentMoviesBinding? =null
+    private val binding get() = _binding!!
 
 
     override fun onCreateView(
@@ -17,7 +18,11 @@ class MoviesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movies, container, false)
+        _binding = FragmentMoviesBinding.inflate(inflater, container, false)
+        binding.recyclerView.showShimmer()
+
+
+        return binding.root
     }
 
 
