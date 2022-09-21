@@ -1,5 +1,6 @@
 package com.mldamico.movies.data
 
+import android.util.Log
 import com.mldamico.movies.data.network.MoviesApi
 import com.mldamico.movies.models.Movies
 import retrofit2.Response

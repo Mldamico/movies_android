@@ -7,6 +7,6 @@ import retrofit2.http.QueryMap
 
 interface MoviesApi {
 
-    @GET("/movie/now_playing")
+    @GET("/3/movie/now_playing")
     suspend fun getMovies(@QueryMap queries: Map<String, String>): Response<Movies>
 }
