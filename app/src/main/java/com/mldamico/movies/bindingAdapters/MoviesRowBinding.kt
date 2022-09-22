@@ -18,6 +18,7 @@ class MoviesRowBinding {
 
             imageView.load("https://image.tmdb.org/t/p/w300$imageUrl") {
                 crossfade(600)
+                error(R.drawable.ic_broken_image)
             }
         }
 

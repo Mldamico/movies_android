@@ -1,4 +1,4 @@
-package com.mldamico.movies
+package com.mldamico.movies.viewmodels
 
 import android.app.Application
 import android.content.Context
@@ -6,13 +6,13 @@ import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.mldamico.movies.data.Repository
+import com.mldamico.movies.data.database.MoviesEntity
 import com.mldamico.movies.models.Movies
 import com.mldamico.movies.util.NetworkResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
@@ -23,6 +23,13 @@ class MainViewModel @Inject constructor
     private val repository: Repository,
     application: Application
 ) : AndroidViewModel(application) {
+
+    val readMovies: LiveData<List<MoviesEntity>> = repository.local.readDatabase().asLiveData()
+
+    private fun insertMovies(moviesEntity: MoviesEntity) = viewModelScope.launch(Dispatchers.IO) {
+        repository.local.insertMovies(moviesEntity)
+    }
+
     var moviesResponse: MutableLiveData<NetworkResult<Movies>> = MutableLiveData()
 
     fun getMovies(queries: Map<String, String>) = viewModelScope.launch {
@@ -35,12 +42,21 @@ class MainViewModel @Inject constructor
             try {
                 val response = repository.remote.getMovies(queries)
                 moviesResponse.value = NetworkResult.Success(response.body()!!)
+                val movies = moviesResponse.value!!.data
+                if(movies !=null){
+                    offlineCacheMovies(movies)
+                }
             } catch (e: Exception){
                 moviesResponse.value = NetworkResult.Error("Movies Not Found")
             }
         } else {
             moviesResponse.value = NetworkResult.Error("No Internet Connection.")
         }
+    }
+
+    private fun offlineCacheMovies(movies: Movies) {
+        val moviesEntity = MoviesEntity(movies)
+        insertMovies(moviesEntity)
     }
 
 
