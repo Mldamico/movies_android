@@ -41,7 +41,8 @@ class MoviesFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentMoviesBinding.inflate(inflater, container, false)
-        binding.recyclerView.showShimmer()
+        binding.lifecycleOwner = this
+
         binding.mainViewModel = mainViewModel
         setupRecyclerView()
         readDatabase()
@@ -102,6 +103,11 @@ class MoviesFragment : Fragment() {
         binding.recyclerView.adapter = mAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
         showShimmerEffect()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     private fun showShimmerEffect() {
