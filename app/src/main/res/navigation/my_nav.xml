@@ -9,10 +9,23 @@
         android:id="@+id/moviesFragment"
         android:name="com.mldamico.movies.ui.fragments.movies.MoviesFragment"
         android:label="Movies"
-        tools:layout="@layout/fragment_movies" />
+        tools:layout="@layout/fragment_movies" >
+        <action
+            android:id="@+id/action_moviesFragment_to_moviesBottomSheet"
+            app:destination="@id/moviesBottomSheet" />
+    </fragment>
     <fragment
         android:id="@+id/singleMovieFragment"
         android:name="com.mldamico.movies.ui.fragments.singlemovie.SingleMovieFragment"
         android:label="Movie"
         tools:layout="@layout/fragment_single_movie" />
+    <dialog
+        android:id="@+id/moviesBottomSheet"
+        android:name="com.mldamico.movies.ui.fragments.movies.bottomsheet.MoviesBottomSheet"
+        android:label="movies_bottom_sheet"
+        tools:layout="@layout/movies_bottom_sheet" >
+        <action
+            android:id="@+id/action_moviesBottomSheet_to_moviesFragment"
+            app:destination="@id/moviesFragment" />
+    </dialog>
 </navigation>

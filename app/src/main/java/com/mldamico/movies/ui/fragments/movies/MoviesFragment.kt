@@ -9,7 +9,9 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mldamico.movies.R
 import com.mldamico.movies.viewmodels.MainViewModel
 import com.mldamico.movies.adapters.MoviesAdapter
 import com.mldamico.movies.databinding.FragmentMoviesBinding
@@ -34,18 +36,27 @@ class MoviesFragment : Fragment() {
         super.onCreate(savedInstanceState)
         mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         moviesViewModel = ViewModelProvider(requireActivity()).get(MoviesViewModel::class.java)
+
+
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentMoviesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         binding.mainViewModel = mainViewModel
         setupRecyclerView()
         readDatabase()
+        binding.swipeContainer.setOnRefreshListener {
+            binding.swipeContainer.isRefreshing = false
+            requestApiData()
+        }
+
+        binding.moviesFab.setOnClickListener {
+            findNavController().navigate(R.id.action_moviesFragment_to_moviesBottomSheet)
+        }
 
         return binding.root
     }
