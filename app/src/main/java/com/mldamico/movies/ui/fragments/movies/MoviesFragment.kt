@@ -1,6 +1,7 @@
 package com.mldamico.movies.ui.fragments.movies
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mldamico.movies.R
 import com.mldamico.movies.viewmodels.MainViewModel
@@ -27,10 +29,12 @@ class MoviesFragment : Fragment() {
     private val mAdapter by lazy {
         MoviesAdapter()
     }
+    private val args by navArgs<MoviesFragmentArgs>()
     private lateinit var mainViewModel: MainViewModel
     private lateinit var moviesViewModel: MoviesViewModel
     private var _binding: FragmentMoviesBinding? =null
     private val binding get() = _binding!!
+    private var apiRequestForGenres = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +55,7 @@ class MoviesFragment : Fragment() {
         readDatabase()
         binding.swipeContainer.setOnRefreshListener {
             binding.swipeContainer.isRefreshing = false
+            apiRequestForGenres = false
             requestApiData()
         }
 
@@ -62,20 +67,32 @@ class MoviesFragment : Fragment() {
     }
 
     private fun readDatabase() {
+
        lifecycleScope.launch {
            mainViewModel.readMovies.observeOnce(viewLifecycleOwner) { database ->
-               if(database.isNotEmpty()){
+               if(database.isNotEmpty() && !args.backFromBottomSheet){
                    mAdapter.setData(database[0].movies)
                    hideShimmerEffect()
+               } else if(args.backFromBottomSheet){
+                   apiRequestForGenres = true
+                   requestApiData()
                } else {
+                   apiRequestForGenres = false
                    requestApiData()
                }
            }
        }
     }
 
+
+
     private fun requestApiData() {
-        mainViewModel.getMovies(moviesViewModel.applyQueries())
+        if(apiRequestForGenres){
+            mainViewModel.getMoviesByGenre(moviesViewModel.applyQueriesGenres())
+        } else {
+            mainViewModel.getMovies(moviesViewModel.applyQueries())
+        }
+
         mainViewModel.moviesResponse.observe(viewLifecycleOwner) { response ->
             when(response){
                 is NetworkResult.Success -> {
