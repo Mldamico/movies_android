@@ -2,7 +2,9 @@ package com.mldamico.movies.viewmodels
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mldamico.movies.data.DataStoreRepository
 import com.mldamico.movies.util.Constants
@@ -22,12 +24,20 @@ class MoviesViewModel @Inject constructor(
     private val dataStoreRepository: DataStoreRepository
 ) : AndroidViewModel(application) {
     private var genreType = ""
-
+    var networkStatus = false
+    var backOnline = false
     val readGenreType = dataStoreRepository.readGenreType
-
+    val readBackOnline = dataStoreRepository.readBackOnline.asLiveData()
     fun saveGenreType(genreType: String, genreTypeId: Int) = viewModelScope.launch(Dispatchers.IO) {
-    dataStoreRepository.saveGenreType(genreType, genreTypeId)
+        dataStoreRepository.saveGenreType(genreType, genreTypeId)
     }
+
+    fun saveBackOnline(backOnline: Boolean){
+        viewModelScope.launch(Dispatchers.IO) {
+            dataStoreRepository.saveBackOnline(backOnline)
+        }
+    }
+
 
     fun applyQueries(): HashMap<String, String> {
         val queries: HashMap<String, String> = HashMap()
@@ -39,14 +49,14 @@ class MoviesViewModel @Inject constructor(
 
     fun applyQueriesGenres(): HashMap<String, String> {
         val queries: HashMap<String, String> = HashMap()
-        var genreId =""
+        var genreId = ""
         viewModelScope.launch {
-            readGenreType.collect {value ->
+            readGenreType.collect { value ->
                 genreType = value.selectedGenre
             }
         }
 
-        when(genreType) {
+        when (genreType) {
 
             "action" -> {
                 genreId = "28"
@@ -112,6 +122,16 @@ class MoviesViewModel @Inject constructor(
         queries[QUERY_API_KEY] = Constants.API_KEY
         queries[QUERY_GENRES] = genreId
         return queries
+    }
+
+    fun showNetworkStatus() {
+        if (!networkStatus) {
+            Toast.makeText((getApplication()), "No Internet Connection", Toast.LENGTH_SHORT).show()
+            saveBackOnline(true)
+        } else if (networkStatus && backOnline){
+            Toast.makeText((getApplication()), "Back Online", Toast.LENGTH_SHORT).show()
+            saveBackOnline(false)
+        }
     }
 
 }

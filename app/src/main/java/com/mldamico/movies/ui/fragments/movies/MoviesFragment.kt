@@ -18,6 +18,7 @@ import com.mldamico.movies.viewmodels.MainViewModel
 import com.mldamico.movies.adapters.MoviesAdapter
 import com.mldamico.movies.databinding.FragmentMoviesBinding
 import com.mldamico.movies.util.Constants.Companion.API_KEY
+import com.mldamico.movies.util.NetworkListener
 import com.mldamico.movies.util.NetworkResult
 import com.mldamico.movies.util.observeOnce
 import com.mldamico.movies.viewmodels.MoviesViewModel
@@ -35,6 +36,7 @@ class MoviesFragment : Fragment() {
     private var _binding: FragmentMoviesBinding? =null
     private val binding get() = _binding!!
     private var apiRequestForGenres = false
+    private lateinit var networkListener: NetworkListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +54,20 @@ class MoviesFragment : Fragment() {
 
         binding.mainViewModel = mainViewModel
         setupRecyclerView()
-        readDatabase()
+        moviesViewModel.readBackOnline.observe(viewLifecycleOwner) {
+            moviesViewModel.backOnline = it
+        }
+
+        lifecycleScope.launchWhenStarted  {
+            networkListener = NetworkListener()
+            networkListener.checkNetworkAvailability(requireContext()).collect {status ->
+                Log.d("Networklistener", status.toString())
+                moviesViewModel.networkStatus = status
+                moviesViewModel.showNetworkStatus()
+                readDatabase()
+            }
+        }
+
         binding.swipeContainer.setOnRefreshListener {
             binding.swipeContainer.isRefreshing = false
             apiRequestForGenres = false
@@ -60,7 +75,12 @@ class MoviesFragment : Fragment() {
         }
 
         binding.moviesFab.setOnClickListener {
-            findNavController().navigate(R.id.action_moviesFragment_to_moviesBottomSheet)
+            if(moviesViewModel.networkStatus){
+                findNavController().navigate(R.id.action_moviesFragment_to_moviesBottomSheet)
+            } else {
+                moviesViewModel.showNetworkStatus()
+            }
+
         }
 
         return binding.root
