@@ -4,6 +4,7 @@ package com.mldamico.movies.models
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import kotlinx.android.parcel.RawValue
 
 @Parcelize
 data class Result(
@@ -24,5 +25,9 @@ data class Result(
     @SerializedName("vote_average")
     val voteAverage: Double,
     @SerializedName("vote_count")
-    val voteCount: Int
+    val voteCount: Int,
+    @SerializedName("release_date")
+    val releaseDate: String,
+    @SerializedName("genre_ids")
+    val genres: List<Int>,
 ): Parcelable

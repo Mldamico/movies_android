@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.ArrayAdapter
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.navigation.navArgs
@@ -21,6 +22,14 @@ class OverviewActivity : AppCompatActivity() {
         binding = ActivityOverviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        val listAdapter: ArrayAdapter<String>
+        val newList = mutableListOf<String>()
+        for(item in args.result.genres){
+            newList.add(mapGenreIdToString(item))
+        }
+        Log.d("overview",newList.toString())
+
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
 
@@ -30,7 +39,77 @@ class OverviewActivity : AppCompatActivity() {
         binding.titleSingleMovieTextView.text = args.result.title
         binding.summaryTextView.text = args.result.overview
         binding.avgTextView.text = args.result.voteAverage.toString()
+        binding.releaseDateOverview.text = args.result.releaseDate
+        binding.languageOverview.text = args.result.originalLanguage
 
+        listAdapter = ArrayAdapter(this,android.R.layout.simple_list_item_1, newList)
+        binding.genreList.adapter = listAdapter
+
+    }
+
+    private fun mapGenreIdToString(genreId: Int): String{
+        var genreType:String =""
+        when (genreId) {
+            28 -> {
+                genreType = "Action"
+            }
+            12 -> {
+                genreType = "Adventure"
+            }
+            16 -> {
+                genreType = "Animation"
+            }
+            35 -> {
+                genreType = "Comedy"
+            }
+            80 -> {
+                genreType = "Crime"
+            }
+            99 -> {
+                genreType = "Documentary"
+            }
+            18 -> {
+                genreType = "Drama"
+            }
+            10751-> {
+                genreType = "Family"
+            }
+            14 -> {
+                genreType = "Fantasy"
+            }
+            36-> {
+                genreType = "History"
+            }
+             27-> {
+                genreType = "Horror"
+            }
+            10402 -> {
+                genreType = "Music"
+            }
+            9648 -> {
+                genreType = "Mistery"
+            }
+            10749 -> {
+                genreType = "Romance"
+            }
+            878 -> {
+                genreType = "Science Fiction"
+            }
+           10770 -> {
+                genreType = "TV Movie"
+            }
+            53 -> {
+                genreType = "Thriller"
+            }
+            10752 -> {
+                genreType = "War"
+            }
+            37 -> {
+                genreType = "Western"
+            }
+        }
+
+        return genreType
 
     }
 

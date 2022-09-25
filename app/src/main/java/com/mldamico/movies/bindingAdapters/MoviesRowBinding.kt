@@ -24,7 +24,7 @@ class MoviesRowBinding {
                     val action = MoviesFragmentDirections.actionMoviesFragmentToOverviewActivity(result)
                     movieRowLayout.findNavController().navigate(action)
                 } catch (e: Exception){
-                    Log.d("onRecipeClickListener", e.toString())
+                    Log.d("onMovieClickListener", e.toString())
                 }
             }
         }

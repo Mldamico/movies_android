@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/overviewLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layoutDescription="@xml/activity_overview_scene"
     tools:context=".ui.OverviewActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -18,7 +19,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -53,8 +54,8 @@
         android:layout_marginBottom="12dp"
         android:text="@string/_0"
         android:textColor="@color/white"
-        android:textStyle="bold"
         android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/main_imageView"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -63,10 +64,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_heart"
-        app:tint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/avg_textView"
         app:layout_constraintEnd_toEndOf="@+id/avg_textView"
-        app:layout_constraintStart_toStartOf="@+id/avg_textView" />
+        app:layout_constraintStart_toStartOf="@+id/avg_textView"
+        app:tint="@color/white" />
 
     <TextView
         android:id="@+id/title_single_movie_textView"
@@ -83,44 +84,98 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/main_imageView" />
 
+    <TextView
+        android:id="@+id/release_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/release_date"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/title_single_movie_textView"
+        app:layout_constraintTop_toBottomOf="@+id/title_single_movie_textView" />
+
+    <TextView
+        android:id="@+id/release_date_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:text="Date"
+        app:layout_constraintBottom_toBottomOf="@+id/release_date"
+        app:layout_constraintStart_toEndOf="@+id/release_date"
+        app:layout_constraintTop_toTopOf="@+id/release_date" />
+
+
+    <TextView
+        android:id="@+id/language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/language"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/release_date_overview"
+        app:layout_constraintStart_toEndOf="@+id/release_date_overview"
+        app:layout_constraintTop_toTopOf="@+id/release_date_overview" />
+
+    <TextView
+        android:id="@+id/language_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:text="EN"
+        app:layout_constraintBottom_toBottomOf="@+id/language"
+        app:layout_constraintStart_toEndOf="@+id/language"
+        app:layout_constraintTop_toTopOf="@+id/language" />
+
+
+    <ListView
+        android:id="@+id/genre_list"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/release_date" />
+
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_single_movie_textView">
+        app:layout_constraintTop_toBottomOf="@+id/genre_list"
+        app:layout_constraintVertical_bias="1.0">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/summary_textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/description"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </LinearLayout>
     </ScrollView>
 
 
     <!--    <androidx.fragment.app.FragmentContainerView-->
-<!--        android:id="@+id/overview_fragment"-->
-<!--        android:name="com.mldamico.movies.ui.fragments.singlemovie.SingleMovieFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
+    <!--        android:id="@+id/overview_fragment"-->
+    <!--        android:name="com.mldamico.movies.ui.fragments.singlemovie.SingleMovieFragment"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
 
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.0"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/appBar"-->
-<!--        app:layout_constraintVertical_bias="0.0" />-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.0"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/appBar"-->
+    <!--        app:layout_constraintVertical_bias="0.0" />-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

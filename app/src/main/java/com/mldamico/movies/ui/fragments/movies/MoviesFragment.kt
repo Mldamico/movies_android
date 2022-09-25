@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mldamico.movies.R
 import com.mldamico.movies.adapters.MoviesAdapter
 import com.mldamico.movies.databinding.FragmentMoviesBinding
@@ -100,6 +101,9 @@ class MoviesFragment : Fragment(), SearchView.OnQueryTextListener {
             }
 
         }
+
+
+
 
         return binding.root
     }
