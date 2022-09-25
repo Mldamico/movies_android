@@ -8,11 +8,13 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.mldamico.movies.data.DataStoreRepository
 import com.mldamico.movies.util.Constants
+import com.mldamico.movies.util.Constants.Companion.API_KEY
 import com.mldamico.movies.util.Constants.Companion.GENRE
 import com.mldamico.movies.util.Constants.Companion.QUERY_API_KEY
 import com.mldamico.movies.util.Constants.Companion.QUERY_GENRES
 import com.mldamico.movies.util.Constants.Companion.QUERY_LANGUAGE
 import com.mldamico.movies.util.Constants.Companion.QUERY_PAGE
+import com.mldamico.movies.util.Constants.Companion.QUERY_SEARCH
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,6 +47,15 @@ class MoviesViewModel @Inject constructor(
         queries[QUERY_LANGUAGE] = "en-US"
         queries[QUERY_PAGE] = "1"
         return queries
+    }
+
+    fun applySearchQuery(query: String):HashMap<String, String>{
+        val queries: HashMap<String, String> = HashMap()
+        queries[QUERY_API_KEY]= API_KEY
+        queries[QUERY_SEARCH] = query
+
+
+        return  queries
     }
 
     fun applyQueriesGenres(): HashMap<String, String> {

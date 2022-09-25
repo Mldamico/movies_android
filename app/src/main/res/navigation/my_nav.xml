@@ -17,12 +17,11 @@
             android:name="backFromBottomSheet"
             app:argType="boolean"
             android:defaultValue="false" />
+        <action
+            android:id="@+id/action_moviesFragment_to_overviewActivity"
+            app:destination="@id/overviewActivity" />
     </fragment>
-    <fragment
-        android:id="@+id/singleMovieFragment"
-        android:name="com.mldamico.movies.ui.fragments.singlemovie.SingleMovieFragment"
-        android:label="Movie"
-        tools:layout="@layout/fragment_single_movie" />
+
     <dialog
         android:id="@+id/moviesBottomSheet"
         android:name="com.mldamico.movies.ui.fragments.movies.bottomsheet.MoviesBottomSheet"
@@ -32,4 +31,13 @@
             android:id="@+id/action_moviesBottomSheet_to_moviesFragment"
             app:destination="@id/moviesFragment" />
     </dialog>
+    <activity
+        android:id="@+id/overviewActivity"
+        android:name="com.mldamico.movies.ui.OverviewActivity"
+        android:label="Description"
+        tools:layout="@layout/activity_overview" >
+        <argument
+            android:name="result"
+            app:argType="com.mldamico.movies.models.Result" />
+    </activity>
 </navigation>

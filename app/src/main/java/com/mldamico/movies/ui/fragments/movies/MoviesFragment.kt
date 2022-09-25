@@ -1,32 +1,34 @@
 package com.mldamico.movies.ui.fragments.movies
 
+import android.app.Activity
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mldamico.movies.R
-import com.mldamico.movies.viewmodels.MainViewModel
 import com.mldamico.movies.adapters.MoviesAdapter
 import com.mldamico.movies.databinding.FragmentMoviesBinding
-import com.mldamico.movies.util.Constants.Companion.API_KEY
 import com.mldamico.movies.util.NetworkListener
 import com.mldamico.movies.util.NetworkResult
 import com.mldamico.movies.util.observeOnce
+import com.mldamico.movies.viewmodels.MainViewModel
 import com.mldamico.movies.viewmodels.MoviesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
 @AndroidEntryPoint
-class MoviesFragment : Fragment() {
+class MoviesFragment : Fragment(), SearchView.OnQueryTextListener {
     private val mAdapter by lazy {
         MoviesAdapter()
     }
@@ -48,11 +50,27 @@ class MoviesFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMoviesBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         binding.mainViewModel = mainViewModel
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.movies_menu, menu)
+
+                val search = menu.findItem(R.id.menu_search)
+                val searchView = search.actionView as? SearchView
+                searchView?.isSubmitButtonEnabled = true
+
+                searchView?.setOnQueryTextListener(this@MoviesFragment)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return true
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
         setupRecyclerView()
         moviesViewModel.readBackOnline.observe(viewLifecycleOwner) {
             moviesViewModel.backOnline = it
@@ -61,7 +79,7 @@ class MoviesFragment : Fragment() {
         lifecycleScope.launchWhenStarted  {
             networkListener = NetworkListener()
             networkListener.checkNetworkAvailability(requireContext()).collect {status ->
-                Log.d("Networklistener", status.toString())
+
                 moviesViewModel.networkStatus = status
                 moviesViewModel.showNetworkStatus()
                 readDatabase()
@@ -164,6 +182,55 @@ class MoviesFragment : Fragment() {
 
     private fun hideShimmerEffect() {
         binding.recyclerView.hideShimmer()
+    }
+
+    private fun hideKeyboard(){
+        val imm: InputMethodManager =
+            requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+    }
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if (query != null) {
+            searchApiData(query)
+            hideKeyboard()
+        }
+
+
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        if(query.isNullOrEmpty()){
+            requestApiData()
+            hideKeyboard()
+        }
+        return true
+    }
+
+    private fun searchApiData(query: String) {
+        showShimmerEffect()
+        mainViewModel.searchMovies(moviesViewModel.applySearchQuery(query))
+        mainViewModel.searchMoviesResponse.observe(viewLifecycleOwner) { response ->
+            when(response){
+                is NetworkResult.Success ->{
+                    hideShimmerEffect()
+                    val movies = response.data
+                    movies?.let { mAdapter.setData(it) }
+                }
+                is NetworkResult.Error -> {
+                    hideShimmerEffect()
+                    loadDataFromCache()
+                    Toast.makeText(
+                        requireContext(),
+                        response.message.toString(),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                is NetworkResult.Loading -> {
+                    showShimmerEffect()
+                }
+            }
+        }
     }
 
 

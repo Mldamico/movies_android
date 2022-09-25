@@ -4,13 +4,30 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.navigation.findNavController
 import coil.load
 import com.mldamico.movies.R
+import com.mldamico.movies.models.Result
+import com.mldamico.movies.ui.fragments.movies.MoviesFragmentDirections
 
 class MoviesRowBinding {
     companion object {
+
+        @BindingAdapter("onMovieClickListener")
+        @JvmStatic
+        fun onMovieClickListener(movieRowLayout: ConstraintLayout, result: Result) {
+            movieRowLayout.setOnClickListener {
+                try {
+                    val action = MoviesFragmentDirections.actionMoviesFragmentToOverviewActivity(result)
+                    movieRowLayout.findNavController().navigate(action)
+                } catch (e: Exception){
+                    Log.d("onRecipeClickListener", e.toString())
+                }
+            }
+        }
 
         @BindingAdapter("loadImageFromUrl")
         @JvmStatic

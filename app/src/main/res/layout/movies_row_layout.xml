@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="result"
             type="com.mldamico.movies.models.Result" />
@@ -11,6 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/recipes_rowLayout"
+        onMovieClickListener="@{result}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -20,14 +22,14 @@
             android:id="@+id/row_cardView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/lightMediumGray"
             app:cardCornerRadius="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeColor="@color/lightMediumGray"
+            app:strokeWidth="1dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -36,10 +38,10 @@
 
                 <ImageView
                     android:id="@+id/movie_imageView"
+                    loadImageFromUrl="@{result.posterPath}"
                     android:layout_width="200dp"
                     android:layout_height="0dp"
                     android:scaleType="centerCrop"
-                    loadImageFromUrl="@{result.posterPath}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -67,9 +69,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="@{result.overview}"
                     android:ellipsize="end"
                     android:maxLines="3"
+                    android:text="@{result.overview}"
                     android:textColor="@color/darkGray"
                     app:layout_constraintEnd_toEndOf="@+id/title_textView"
                     app:layout_constraintStart_toStartOf="@+id/title_textView"
@@ -81,21 +83,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:layout_marginBottom="36dp"
-                    app:tint="@color/red"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/description_textView"
                     app:layout_constraintTop_toBottomOf="@+id/description_textView"
                     app:layout_constraintVertical_bias="0.01"
-                    app:srcCompat="@drawable/ic_heart" />
+                    app:srcCompat="@drawable/ic_heart"
+                    app:tint="@color/red" />
 
                 <TextView
                     android:id="@+id/heart_textView"
+                    setVoteAverage="@{result.voteAverage}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:textAlignment="center"
                     android:textColor="@color/red"
-                    setVoteAverage="@{result.voteAverage}"
                     app:layout_constraintEnd_toEndOf="@+id/heart_imageView"
                     app:layout_constraintStart_toStartOf="@+id/heart_imageView"
                     app:layout_constraintTop_toBottomOf="@+id/heart_imageView" />
@@ -112,34 +114,34 @@
 
                 <TextView
                     android:id="@+id/average_textView"
+                    setVoteCount="@{result.voteCount}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:textAlignment="center"
                     android:textColor="@color/yellow"
-                    setVoteCount="@{result.voteCount}"
                     app:layout_constraintEnd_toEndOf="@+id/average_imageView"
                     app:layout_constraintStart_toStartOf="@+id/average_imageView"
                     app:layout_constraintTop_toBottomOf="@+id/average_imageView" />
 
                 <ImageView
                     android:id="@+id/child_imageView"
+                    applyChildColor="@{!result.adult}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    applyChildColor="@{!result.adult}"
                     app:layout_constraintStart_toEndOf="@+id/average_imageView"
                     app:layout_constraintTop_toTopOf="@+id/average_imageView"
                     app:srcCompat="@drawable/ic_child" />
 
                 <TextView
                     android:id="@+id/child_textView"
+                    applyChildColor="@{!result.adult}"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textAlignment="center"
                     android:text="Child"
-                    applyChildColor="@{!result.adult}"
+                    android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="@+id/child_imageView"
                     app:layout_constraintStart_toStartOf="@+id/child_imageView"
                     app:layout_constraintTop_toBottomOf="@+id/child_imageView" />

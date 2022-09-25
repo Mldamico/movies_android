@@ -15,4 +15,8 @@ class RemoteDataSource @Inject constructor(private val moviesApi: MoviesApi) {
     suspend fun getMoviesByGenre(queries: Map<String, String>): Response<Movies>{
         return moviesApi.getMovieByGenre(queries)
     }
+
+    suspend fun searchQuery(queries: Map<String, String>): Response<Movies>{
+        return moviesApi.searchMovie(queries)
+    }
 }

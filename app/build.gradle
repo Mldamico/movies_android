@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -33,6 +34,9 @@ android {
         jvmTarget = '1.8'
     }
     dataBinding {
+        enabled = true
+    }
+    viewBinding {
         enabled = true
     }
 }

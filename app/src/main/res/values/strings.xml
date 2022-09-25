@@ -25,4 +25,8 @@
     <string name="war">War</string>
     <string name="thriller">Thriller</string>
     <string name="apply">Apply</string>
+    <string name="search">Search</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
+    <string name="_0">0</string>
 </resources>

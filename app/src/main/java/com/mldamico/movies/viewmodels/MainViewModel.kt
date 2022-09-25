@@ -32,9 +32,32 @@ class MainViewModel @Inject constructor
     }
 
     var moviesResponse: MutableLiveData<NetworkResult<Movies>> = MutableLiveData()
+    var searchMoviesResponse: MutableLiveData<NetworkResult<Movies>> = MutableLiveData()
 
     fun getMovies(queries: Map<String, String>) = viewModelScope.launch {
         getMoviesSafeCall(queries)
+    }
+
+    fun searchMovies(queries: Map<String, String>) = viewModelScope.launch {
+        searchMoviesSafeCall(queries)
+    }
+
+    private suspend fun searchMoviesSafeCall(queries: Map<String, String>) {
+        searchMoviesResponse.value = NetworkResult.Loading()
+        if(hasInternetConnection()){
+            try {
+
+                val response = repository.remote.searchQuery(queries)
+                Log.d("mainviewmodel", response.body().toString())
+                searchMoviesResponse.value = NetworkResult.Success(response.body()!!)
+
+
+            } catch (e: Exception){
+                searchMoviesResponse.value = NetworkResult.Error("Movies Not Found")
+            }
+        } else {
+            searchMoviesResponse.value = NetworkResult.Error("No Internet Connection.")
+        }
     }
 
     private suspend fun getMoviesSafeCall(queries: Map<String, String>) {

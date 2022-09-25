@@ -12,4 +12,7 @@ interface MoviesApi {
 
     @GET("/3/discover/movie")
     suspend fun getMovieByGenre(@QueryMap queries: Map<String, String>): Response<Movies>
+
+    @GET("/3/search/movie")
+    suspend fun searchMovie(@QueryMap queries: Map<String, String>): Response<Movies>
 }
